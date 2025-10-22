@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ../Downloads
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      # Ссылки на секреты как на переменные окружения
+      - DOCKERHUB_USERNAME_FILE=/run/secrets/dockerhub_username
+      - DOCKERHUB_TOKEN_FILE=/run/secrets/dockerhub_token
+      - HH_CLIENT_ID_FILE=/run/secrets/hh_client_id
+      - HH_CLIENT_SECRET_FILE=/run/secrets/hh_client_secret
+    secrets:
+      - dockerhub_username
+      - dockerhub_token
+      - hh_client_id
+      - hh_client_secret
+    networks:
+      - app-network
+
+secrets:
+  dockerhub_username:
+    external: true
+  dockerhub_token:
+    external: true
+  hh_client_id:
+    external: true
+  hh_client_secret:
+    external: true
+
+networks:
+  app-network:
+    driver: bridge
